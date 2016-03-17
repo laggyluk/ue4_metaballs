@@ -1,8 +1,9 @@
 Installation:
 
-1) Copy MetaballsPlugin into your ProjectRoorFoleder\Plugins
+1) Copy MetaballsPlugin into your ProjectRootFolder\Plugins
 
 2) Create Blue Print with parent class Mataballs
+![alt tag](https://github.com/andyrst/ue4_metaballs/meta_help1.jpg)
 
 3) Add Blue Print to the Level map
 
