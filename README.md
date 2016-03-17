@@ -1,3 +1,7 @@
+Metaballs FX for Unreal Engine 4:
+
+https://www.youtube.com/watch?v=Z0xbnEMbMxw
+
 Installation:
 
 1) Copy MetaballsPlugin into your ProjectRootFolder\Plugins
@@ -17,9 +21,8 @@ Installation:
 
 
 
-Please, make sure that completely installed Microsoft Visual Studio 2015
+Please, make sure that completely installed Microsoft Visual Studio 2015 and Unreal Engine 4.10
 
-https://www.youtube.com/watch?v=Z0xbnEMbMxw
 
 Autor:
 Andrey Harchenko, 2016
