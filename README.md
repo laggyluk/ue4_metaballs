@@ -19,5 +19,7 @@ Installation:
 
 Please, make sure that completely installed Microsoft Visual Studio 2015
 
+https://www.youtube.com/watch?v=Z0xbnEMbMxw
+
 Autor:
-Andrey Harchenko
+Andrey Harchenko, 2016
