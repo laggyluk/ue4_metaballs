@@ -26,5 +26,5 @@ Installation:
 Please, make sure that completely installed Microsoft Visual Studio 2015 and Unreal Engine 4.10
 
 
-Autor:
+Author:
 Andrey Harchenko, 2016
