@@ -1,0 +1,8 @@
+DemoProject/Intermediate/
+DemoProject/.vs/
+*.sln
+DemoProject/Binaries/
+DemoProject/Saved/Config/CrashReportClient/UE4CC-Windows-81C0D58249BF64AF52416BB329A46561/CrashReportClient.ini
+DemoProject/Saved/
+DemoProject/Plugins/MetaballsPlugin/Intermediate/
+DemoProject/Plugins/MetaballsPlugin/Binaries/
