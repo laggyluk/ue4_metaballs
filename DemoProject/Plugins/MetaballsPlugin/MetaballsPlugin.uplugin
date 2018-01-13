@@ -3,7 +3,7 @@
     "FriendlyName" : "Metaballs FX Plugin",
     "Version" : 1,
     "VersionName": "1.0",
-    "EngineVersion" : "4.18",
+    "EngineVersion" : "4.18.0",
     "Description" : "Provides the code for the Metaballs fx",
     "Category" : "Metaballs",
     "CreatedBy" : "Andrey Harchenko",

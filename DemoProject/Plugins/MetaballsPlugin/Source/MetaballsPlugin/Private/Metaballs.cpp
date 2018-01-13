@@ -18,41 +18,46 @@
 
 
 #include "MetaballsPluginPrivatePCH.h"
-#include "CMarchingCubes.h"
 #include "Metaballs.h"
+#include "CMarchingCubes.h"
 
-
-
+DEFINE_LOG_CATEGORY(YourLog);
 
 
 // Sets default values
+
 AMetaballs::AMetaballs(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+/*
 	UCapsuleComponent* CapsuleComp = ObjectInitializer.CreateDefaultSubobject<UCapsuleComponent>(this, TEXT("RootComp"));
+	CapsuleComp->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	CapsuleComp->InitCapsuleSize(40.0f, 40.0f);
+	CapsuleComp->SetRelativeLocation(FVector::ZeroVector);
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	CapsuleComp->SetMobility(EComponentMobility::Movable);
+*/
 //	RootComponent = CapsuleComp;
 
 	MetaBallsBoundBox = ObjectInitializer.CreateDefaultSubobject<UBoxComponent>(this, TEXT("GridBox"));
+	MetaBallsBoundBox->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	MetaBallsBoundBox->InitBoxExtent(FVector(100, 100, 100));
+	MetaBallsBoundBox->SetRelativeLocation(FVector::ZeroVector);
 //	MetaBallsBoundBox->AttachParent = RootComponent;
-
-
-
 
 	m_mesh = ObjectInitializer.CreateDefaultSubobject<UProceduralMeshComponent>(this, TEXT("MetaballsMesh"));
 	m_mesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 	RootComponent = m_mesh;
+
+	//MetaBallsBoundBox->GetAttachParent() = RootComponent;
+	//MetaBallsBoundBox->AttachToComponent(RootComponent,FAttachmentTransformRules::SnapToTargetIncludingScale);
+	//CapsuleComp->GetAttachParent() = RootComponent;
+	//CapsuleComp->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	
-	MetaBallsBoundBox->GetAttachParent() = RootComponent;
-	CapsuleComp->GetAttachParent() = RootComponent;
 
 
 	m_Scale = 100.0f;
@@ -70,9 +75,8 @@ AMetaballs::AMetaballs(const FObjectInitializer& ObjectInitializer) : Super(Obje
 	m_pnGridPointStatus = 0;
 	m_pnGridVoxelStatus = 0;
 
-
-
 }
+
 
 void AMetaballs::PostInitializeComponents()
 {
@@ -114,7 +118,7 @@ void AMetaballs::PostInitializeComponents()
 }
 
 
-DEFINE_LOG_CATEGORY(YourLog);
+
 
 #if WITH_EDITOR
 void AMetaballs::PostEditChangeProperty(struct FPropertyChangedEvent& e)
@@ -358,9 +362,6 @@ void AMetaballs::Update(float dt)
 
 void AMetaballs::Render()
 {
-
-	
-
 	m_vertices.Empty();
 	m_Triangles.Empty();
 	m_normals.Empty();
@@ -379,7 +380,6 @@ void AMetaballs::Render()
 	// Clear status grids
 	memset(m_pnGridPointStatus, 0, (m_nGridSize + 1)*(m_nGridSize + 1)*(m_nGridSize + 1));
 	memset(m_pnGridVoxelStatus, 0, m_nGridSize*m_nGridSize*m_nGridSize);
-
 
 
 	for (int i = 0; i < m_NumBalls; i++)
@@ -628,13 +628,18 @@ int AMetaballs::ComputeGridVoxel(int x, int y, int z)
 			v1 = CMarchingCubes::m_CubeVertices[nIndex0][1] * (1 - t) + CMarchingCubes::m_CubeVertices[nIndex1][1] * t;
 			v2 = CMarchingCubes::m_CubeVertices[nIndex0][2] * (1 - t) + CMarchingCubes::m_CubeVertices[nIndex1][2] * t;
 
+			//m_vertices.Add(FVector((fz + v2 * m_fVoxelSize) * m_Scale, (fy + v1 * m_fVoxelSize) * m_Scale, (fx + v0 * m_fVoxelSize) * m_Scale));
+			//m_vertices.Add(FVector(fz * m_Scale + v2 * m_fVoxelSize* m_Scale, fy * m_Scale + v1 * m_fVoxelSize* m_Scale, fx  * m_Scale + v0 * m_fVoxelSize* m_Scale));
+			//m_vertices.Add(FVector(fz * m_Scale + v2 * m_fVoxelSize* BlobScale, fy * m_Scale + v1 * m_fVoxelSize* BlobScale, fx  * m_Scale + v0 * m_fVoxelSize* BlobScale));
+			//m_vertices.Add(FVector((fz + (v2 * m_fVoxelSize)/BlobScale) * m_Scale,( fy + (v1 * m_fVoxelSize)/ BlobScale) * m_Scale,( fx + (v0 * m_fVoxelSize)/BlobScale) * m_Scale));
+
 			v0 = fx + v0 * m_fVoxelSize;
 			v1 = fy + v1 * m_fVoxelSize;
 			v2 = fz + v2 * m_fVoxelSize;
 
 			ComputeNormal(FVector(v2, v1, v0));
 
-			m_vertices.Add(FVector(v2 * m_Scale, v1 * m_Scale, v0 * m_Scale));
+			m_vertices.Add(FVector(v2 * m_Scale, v1 * m_Scale, v0 * m_Scale));								
 
 			m_nNumVertices++;
 		}
@@ -780,9 +785,25 @@ void AMetaballs::SetBallTransform(int32 index, FVector transfrom)
 	}
 	else
 	{
-		m_Balls[index].p.Y = transfrom.X;
-		m_Balls[index].p.X = transfrom.Y;
-		m_Balls[index].p.Z = transfrom.Z;
+		m_Balls[index].p.Y = FMath::Clamp(transfrom.X, -0.9f,0.9f);
+		m_Balls[index].p.X = FMath::Clamp(transfrom.Y, -0.9f, 0.9f);
+		m_Balls[index].p.Z = FMath::Clamp(transfrom.Z, -0.9f, 0.9f);
+	}
+}
+
+FVector AMetaballs::GetBallTransform(int32 index)
+{
+	if (index > m_NumBalls - 1)
+	{
+		return FVector::ZeroVector;
+	}
+	else
+	{
+		return FVector(
+			m_Balls[index].p.Y,
+			m_Balls[index].p.X,
+			m_Balls[index].p.Z
+		);
 	}
 }
 

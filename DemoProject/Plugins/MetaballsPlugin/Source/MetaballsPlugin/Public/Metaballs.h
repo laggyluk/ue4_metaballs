@@ -15,14 +15,13 @@
 // See "License.md" for full licensing details.
 
 #pragma once
-#include "MetaballsPluginPrivatePCH.h"
+//#include "MetaballsPluginPrivatePCH.h"
+//#include "MetaballsPlugin.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/BoxComponent.h"
 #include "Metaballs.generated.h"
-
-
-
 
 
 DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
@@ -42,7 +41,8 @@ struct SMetaBall
 UCLASS()
 class METABALLSPLUGIN_API AMetaballs : public AActor
 {
-	GENERATED_UCLASS_BODY()
+	//GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 	
 public:	
 
@@ -57,9 +57,9 @@ public:
 		MAX_LIMIT = 1,
 	};
 
-
-	// Sets default values for this actor's properties
-
+	
+	// Sets default values for this pawn's properties
+	AMetaballs(const FObjectInitializer& ObjectInitializer);
 
 	// Called when the game starts or when spawned
 	virtual void PostInitializeComponents() override;
@@ -76,6 +76,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Metaballs")
 	void SetBallTransform(int32 index, FVector transfrom);
+
+	UFUNCTION(BlueprintCallable, Category = "Metaballs")
+	FVector GetBallTransform(int32 index);
 
 	UFUNCTION(BlueprintCallable, Category = "Metaballs")
 	void SetNumBalls(int32 value);
@@ -106,8 +109,11 @@ public:
 	int32 m_NumBalls;
 
 	/*Metaballs area scale*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (DisplayName = "Scale"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (DisplayName = "Area Scale"))
 	float m_Scale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (DisplayName = "Blob Scale"))
+	float BlobScale = 100;
 
 	/*If bigger value, then metaballs are more detailed*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (DisplayName = "Grid steps"))
@@ -203,8 +209,5 @@ protected:
 	TArray<FVector2D> m_UV0;
 	TArray<FColor> m_vertexColors;
 
-
-
 	TArray<FProcMeshTangent> m_tangents;
-
 };

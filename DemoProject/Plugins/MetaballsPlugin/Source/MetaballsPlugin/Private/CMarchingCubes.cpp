@@ -1,4 +1,3 @@
-
 #include "MetaballsPluginPrivatePCH.h"
 #include "CMarchingCubes.h"
 
